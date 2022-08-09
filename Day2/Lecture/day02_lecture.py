@@ -141,6 +141,9 @@ class Human:
         self.age = age 
         self.pronoun = pronoun
         self.name = name 
+# DESCRIPTION: every time there's an instance of this class, Python will
+# require that this class have three required arguments. Now, whenever you
+# create an object of class `human`, it must have these three attributes.
 
 me = Human() # Now we need to add age and name
 me = Human(age = 50, pronoun = 'she', name = 'Susie')
@@ -155,11 +158,15 @@ class Human:
     # attribute for the class
     latin_name = 'homo sapien'
     # add attributes for the instance
-    # this is an initializer ()or constructor) 
+    # this is an initializer (or constructor) 
     def __init__(self, age, pronoun = 'None', name = 'None'):
         self.age = age 
         self.pronoun = pronoun
         self.name = name 
+# If you're making a model, it might be nice on one hand to have default 
+# values for parameters, but on the other hand you might want people who 
+# use your model to think about what those parameter values should be.
+        
 me = Human(age = 50, name = 'Susie')
 # Make sure you set the non-default arguments first in our new class.
 me.age
@@ -198,12 +205,17 @@ me.introduce()
 
 class PhDStudent(Human):
     pass
+# In this case, class `human` has a child (sub-class) `PhDStudent` that 
+# inherits things from the parent. Class `PhDStudent` is inheriting 
+# methods/attributes previously defined as class `human`.
 
 me = PhDStudent(age = 50, name = 'Susie', pronoun = 'she')
 me.speak("Hi, I'm a political science PhD student.")
 me.introduce()
 
 # We can add more attributes to our new class
+# i.e., make attributes that are ONLY available to the child/sub-class
+# 'PhDStudent` but NOT available to the parent class `Human`
 class PhDStudent(Human):
     def __init__(self, age, pronoun, name, field):
         Human.__init__(self, age, pronoun, name)
@@ -340,12 +352,12 @@ class Parent():
       print("I am the " + self.role() + " of " + kid.name())
 
 class Child():
-  def __init__(self, firstname, parent):
+  def __init__(self, firstname, parent): 
     self.parent = parent 
-    self.lastname = parent.lastname 
+    self.lastname = parent.lastname # Child will inherent last name of parent.
     self.firstname = firstname
 
-  def set_name(self, new_first_name, new_last_name):
+  def set_name(self, new_first_name, new_last_name): 
     self.firstname = new_first_name
     self.lastname = new_last_name
 
@@ -359,6 +371,13 @@ class Child():
     for kid in self.parent.kids:
       if kid != self:
         print("I have a sibling named " + kid.name())
+
+# Child inherits certain attributes of the parent:
+    # LAST NAME.
+    # OTHER CHILDREN OF PARENT.
+    
+# We have attributes of parent imbedded in child class definition and 
+# attributes of child imbedded in parent class definition
         
 
 # Create mom, an instance of Parent
@@ -399,13 +418,17 @@ class Animal:
     
     living = "Yes!" ## attribute of all Animal objects
 
+    # Require animals to have a name:
     def __init__(self, name): # Constructor of the class
         self.name = name
       
+    # Give animals the ability (function) to talk.
     def talk(self): # Abstract method, defined by convention only
         raise NotImplementedError("Subclass must implement abstract method")
     # An abstract method is a method that is declared, but contains no implementation.
 
+    # Each animal has a method for whether its furry. It defaults to True.
+    # Though this can be overrode.
     def furry(self): ## function object of all Animals
         return True
 
@@ -442,12 +465,17 @@ animals = [leonard, gus, nemo]
 # Why did this happen?  How do we fix it?
 for animal in animals:
     print(animal.name + ': ' + animal.talk())
+# The error happened because fish doesn't have the `talk` method. So `fish`
+# is looking for `talk` and finds that it doesn't have that.
 
 # We would need to modify class Fish
 
 ## What happened here?
 for animal in animals:
     print(animal.name + ': ' + str(animal.furry()))
+# works here because although cat + dog don't have furry specifically defined, 
+# they can default to the 'furry' option. Fish, however, explicitly notes that 
+# it is not furry.
 
 
 # Copyright of the original version:
