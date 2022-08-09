@@ -51,6 +51,7 @@ name = 'Dwayne'
 age = "50"
 # Combining strings, using .format{}
 intro =  "Hi, my name is {}. I'm {} years old.".format(name, age)
+intro = f"Hi, my name is {name}. I'm {age} years old."
 print(intro)
 # Combining strings, using +
 intro = "Hi, I'm " + name + ", I'm " + age
