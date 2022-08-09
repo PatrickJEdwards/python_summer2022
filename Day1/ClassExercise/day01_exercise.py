@@ -5,6 +5,10 @@
 # Write a for loop, while loop, or function (or all three!) to create a
 # list of the first 10 numbers of the fibonacci sequence
 
+X = [1] * 10
+for i in range(1, len(X) - 1):
+    print(i)
+    X[i + 1] = X[i] + X[i - 1]
 
 
 """return true if there is no e in 'word', else false"""
