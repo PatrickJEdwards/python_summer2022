@@ -105,7 +105,8 @@ for i in range(0, 5):
 #  - pass 
 #       to continue execution without doing anything
 #  - try: 
-#       tries executing the following
+#       tries executing the following.
+#       creates a loop-like structure.
 #  - except TypeError: 
 #       runs if a Type Error was raised
 #  - except: 
@@ -187,19 +188,19 @@ newlist
 
 # Short Class Activity
 # Let's say we don't care about floats... rounding down is cool.
-# What type of error would occur? 
+# What type of error would occur? 'type' error (if not integer) and division by zero error.
 # How can we fix it?
 def print_integer(integer):
     try:
         res = 1 / integer
         return "Here is the result: " + str(res)
-    except TypeError:
+    except TypeError: 
         pass
     except ZeroDivisionError:
         pass
     
-print_integer(2)
-print_integer('22')
+print_integer(2) # Also passed because of our exception on typeError. The output `0.5` is not an integer.
+print_integer('22') # Doesn't output anything because we told it to `pass` if there's a `type` error.
 print_integer(0)
 
 # We can nest if and else within try and exception
@@ -214,8 +215,8 @@ def print_integer(integer):
     except: # generic exception must be last
         raise TypeError("Enter a number!")
 
-print_integer('22')
-print_integer(1.2)
+print_integer('22') 
+print_integer(1.2) 
 print_integer(1)
 
 
@@ -252,8 +253,8 @@ def print_integer(integer):
         return None
     else:
         return integer
-print_integer(10) 
-print_integer(1.2) 
+print_integer(10)
+print_integer(1.2)
 print_integer('a')
 print_integer(1)
 
@@ -305,7 +306,7 @@ for n in range(2, 10):
 # Allows easier integration of multiple functions
 # Much easier to return to code:
 #    Write a test for what you want to implement next.
-# Easier to make code changes
+# Easier to make code changes.
 # We can easily incorporate lots of these into our work flow.
 # Test-driven development
 
@@ -344,6 +345,27 @@ class TestStringMethods(unittest.TestCase):
 if __name__ == '__main__': 
     unittest.main()
 # what's wrong here?
+## String that's used is not all uppercase.
+
+# Fixed.
+class TestStringMethods(unittest.TestCase):
+    
+    def test_upper(self): 
+        self.assertEqual('foo'.upper(), 'FOO')
+    
+    def test_isupper(self):
+        self.assertTrue('FOO'.isupper())
+        self.assertFalse('Foo'.isupper())
+    
+    def test_split(self):
+        s = 'hello world'
+        self.assertEqual(s.split(), ['hello', 'world'])
+        # check that s.split fails when the separator is not a string 
+        # We need the keyword "with" when using self.assertRaises():
+        # "with" is a keyword to use a context manager 
+        # See: https://www.geeksforgeeks.org/context-manager-in-python/
+        with self.assertRaises(TypeError):
+            s.split(2)
 
 # Functions to test 
 # Method                      Checks that
