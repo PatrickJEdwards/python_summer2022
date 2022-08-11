@@ -9,7 +9,44 @@
         #If bill passed/failed (true/false)
         #Which senators votes pass, fail, or abstain.
 
+# Copied from class exercise solution (for practice/familiarity)
 
+class Senator():
+    def __init__(self, name):
+        self.name = name
+        self.bills_voted_on = [] ## list of Bill objects.
+        
+    def __str__(self): # print method
+        return f"Senator {self.name}"
+    
+    def vote(self, bill, choice):
+        if choice not in ["yes", "no", "abstain"]:
+            return print("Not a valid option.")
+        bill.votes[choice].append(self.name)
+        self.bills_voted_on.append(bill)
+        return f"Senator {self.name} voted {choice} on the {bill.title} bill."
+
+
+class Bill():
+    def __init__(self, title):
+        self.title = title
+        self.votes = {"yes" : [], "no" : [], "abstain" : []}
+        self.passed = None
+        
+    def __str__(self): # Print method
+        return f"{self.title} Bill"
+    
+    def result(self):
+        if len(self.votes["yes"]) > len(self.votes["no"]):
+            self.passed = True
+        else:
+            self.passed = False
+        return self.passed
+
+
+
+# BELOW: my original attempt:
+"""
 class Senator():
   def __init__(self, name):
     self.name = name
@@ -57,6 +94,7 @@ class Bill():
 
   def result(self):
     ## update and return the "passed" variable to indicate True/False if the bill passed
+"""
 
 # wants to know who votes pass, fail, or abstain.
 
