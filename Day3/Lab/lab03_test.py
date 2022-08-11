@@ -1,6 +1,6 @@
 import unittest
 
-from lab03 import *
+from lab03 import * # needs to be same wd as lab03.py
 
 class labTests(unittest.TestCase):
 	
