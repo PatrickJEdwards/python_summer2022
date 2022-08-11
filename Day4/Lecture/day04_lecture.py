@@ -82,9 +82,9 @@ soup = BeautifulSoup(web_page.read())
 print(soup.prettify()) # enable us to view how tags are nested in the document
 
 # Find all cases of a certain tag 'a'
-soup.find_all('a')
+soup.find_all('a') ## 'a' tags are used in links usually.
 # Find all cases of a certain tag 'h3'
-soup.find_all('h3')
+soup.find_all('h3') 
 # Returns a list... remember this!
 
 # We can extract all text with a certain tag
@@ -142,13 +142,13 @@ sections[2].find_all('a', {'class' : 'first-level'}) ## ALL 'a' tags within the 
 
 
 # Creating a tree of objects. 
-# We use it to get all data for on instance of 'div'
+# We use it to get all data for one instance of 'div'
 all_fields = soup.find_all('div')
 randy = all_fields[35]
 print(randy)
 
 # heading
-randy.find_all("h3") 
+randy.find_all("h3") # Provides list that's Randy's first and last name.
 
 # Gives a list of all children (objects nested within the object)
 randy.contents 
@@ -160,7 +160,9 @@ randy.children # Remember: iterators are objects that we use in loops
 for i, child in enumerate(randy.children):
   print("Child %d: %s" % (i,child))
 
-# Siblings (Example):
+# Children at the same level are called SIBLINGS.
+
+# Siblings (Example): 
 
 # <html>
 #   <body>
@@ -246,7 +248,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup as bs
 from selenium.webdriver.common.keys import Keys
 
-# pip3 install selenium
+pip3 install selenium
 # download appropriate web driver from browser, e.g. https://chromedriver.chromium.org/
 
 # Interactive example:
