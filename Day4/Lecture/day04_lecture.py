@@ -33,17 +33,17 @@
 
 #---------- Page Source ----------#
 
-<!DOCTYPE html> <html>
-<head>
-<title >Page Title </title>
-</head>
-<body>
-
-<h1>My first heading </h1>
-<p>My first paragraph. </p>
-
-</body> 
-</html>
+# <!DOCTYPE html> <html>
+# <head>
+# <title >Page Title </title>
+# </head>
+# <body>
+# 
+# <h1>My first heading </h1>
+# <p>My first paragraph. </p>
+# 
+# </body> 
+# </html>
 
 # Go to https://polisci.wustl.edu/people/88/ 
 # Click right, then View Page Source or (more likely) Inspect
@@ -190,21 +190,22 @@ for sib in randy.previous_siblings:
 # What is happening?
 
 # randy does not have previous siblings.
-<article class="faculty-post"> 
-<div class="image"> # randy = all_fields[35]
-  <img alt="Headshot of Randall Calvert" src="URL"> # Children of randy
-  <h3> # Children of randy
-    <div> # all_fields[36]
-      <span>Randall</span>
-      &nbsp;
-    </div>
-    <div> # all_fields[37]
-      <span>Calvert</span>
-    </div>
-  </h3>
-</div>
-<div class="dept">Academic Position # Next Sibling of randy
-</div>
+
+# <article class="faculty-post"> 
+# <div class="image"> # randy = all_fields[35]
+#   <img alt="Headshot of Randall Calvert" src="URL"> # Children of randy
+#   <h3> # Children of randy
+#     <div> # all_fields[36]
+#       <span>Randall</span>
+#       &nbsp;
+#     </div>
+#     <div> # all_fields[37]
+#       <span>Calvert</span>
+#     </div>
+#   </h3>
+# </div>
+# <div class="dept">Academic Position # Next Sibling of randy
+# </div>
 
 # all_fields[35] has a next sibling and all_fields[37] has a previous sibling
 for sib in all_fields[35].next_siblings:

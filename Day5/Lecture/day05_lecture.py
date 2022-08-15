@@ -9,7 +9,7 @@
 
 # Set Directory
 import os
-os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day5\\Lecture')
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day5\\Lecture')
 
 
 #---------- Regular Expressions ----------#
@@ -29,8 +29,8 @@ with open("obama-nh.txt", "r") as f:
   text = f.readlines()
 
 
-# How is this file structured?
-# How does it impact our 'text' object?
+# How is this file structured? Paragraph breaks are listed as their own line.
+# How does it impact our 'text' object? Now one of the entries in our list object is completely blank.
 print(text[0:3])
 print(text[0])
 print(text[1])
@@ -51,12 +51,13 @@ with open("obama-nh.txt", "r") as f:
 #             in string, as a list of strings
 # re.split: Split string by the occurrences of pattern.
 # re.match: Search the beginning of the string for a
-#           regular expression and return the first occurrence.
-#           Returns a match object.
+#           regular expression and return ONLY the first occurrence.
+#           Returns a match object. If it's not in the first line/string,
+#           then it won't return anything.
 # re.search: Like re.match, but will check all lines of the input string.
 # re.compile: Compile a regular expression pattern into a regular 
 #             expression object, which can be used for matching using
-#             match(), search() and other methods
+#             match(), search() and other methods.
 
 # See https://docs.python.org/3/library/re.html for more.
 
@@ -83,15 +84,17 @@ print(r"\\n")
 
 #---------- Basic special characters ----------#
 
-# \d digits
+# \d digits - (like numbers, etc)
 re.findall(r"\d", alltext) 
-# \D non-digits
+# \D non-digits - literally everything but numbers.
 re.findall(r"\D", alltext) 
 # all instances of the char in []
 re.findall(r"[a]", alltext) 
-# all instances of the from char 1 to char 2 in []
-re.findall(r"[a-d]", alltext) 
+# all instances of the from char 1 to char 2 in [].
+#       In this cse, looks for all instances from 'a' to 'd' (a, b, c, d)
+re.findall(r"[a-d]", alltext)
 # all char, ^ except for of the from char 1 to char 2 in []
+#       In this case, looks for all instances EXCEPT from 'a' to 'd' (NOT a, b, c, d)
 re.findall(r"[^a-d]", alltext) 
 # all char and digits (alphanumeric)
 re.findall(r"[a-zA-Z0-9]", alltext) 
@@ -120,22 +123,11 @@ re.findall(r"\d{1}", alltext)
 re.findall(r"\d{1,3}", alltext) 
 
 # More here: https://www.regular-expressions.info/refrepeat.html
-# And hear: https://www.debuggex.com/cheatsheet/regex/python
+# And here: https://www.debuggex.com/cheatsheet/regex/python
+## CHEAT SHEET.
 
 # Short Exercise: How would we grab 10/10 as it appears in text?
-x = "Hi 10/10 hello 9/18 asdf 9/9"
-
-
-
-
-
-
-
-
-
-
-
-
+x = "Hi 10/10 hello 9/18 asdf 9/9" 
 
 # Answer
 re.findall(r"\d{2}/\d{2}", x) 
@@ -150,7 +142,7 @@ x
 re.findall(r"\\w", x) 
 
 # get any word that starts with America
-re.findall(r"America[a-z]*", alltext) 
+re.findall(r"America[a-z]*", alltext)
 
 # get any complete word starting with an upper-case letter
 re.findall(r"([A-Z]+\w*)", alltext) 
@@ -192,7 +184,7 @@ pattern.findall(alltext)
 pattern.split(alltext)
 
 # Can also search across lines in single strings with re.MULTILINE
-mline = 'bin\nban\ncan'
+mline = 'bin boon\nban\ncan bam'
 print(mline)
 
 # ^ check the start of the string (FYI, $ checks end of string)
@@ -218,21 +210,11 @@ re.findall(r'^b\w*', alltext)
 # How is this working?
 re.findall(r'^.*\.$', alltext, re.MULTILINE)
 
-
-
-
-
-
-
-
-
-
-
-
-# '^.' = starts with any char
-# * returns up to the end of the line
-# \. if the line has a period
-# $ if the line ends with a period
+# '^.' = starts with any char (indicates start of line).
+#       Specifically, the '.' tells it to find any character.
+# * = returns up to the end of the line (zero or more instances of it).
+# \. = if the line has a period.
+# $ = if the line ends with a period (checking if this is the end of the string).
 
 
 #---------- search, match, and groups ----------#
@@ -281,7 +263,7 @@ pattern.search(r"a12 24").groups() # works
 # Some docs for this library: 
 # https://www.nltk.org/api/nltk.classify.naivebayes.html
 
- # pip install nltk
+# pip install nltk
 import nltk
 nltk.download('names')
 from nltk.corpus import names
@@ -387,13 +369,14 @@ for (label, guess, prob, name) in sorted(errors):
 
 
 # What should we do here?
+# Could use diferent set of features that correct for the issues.
 def g_features3(name):
   features = {}
-  if name[-2:] == "ie" or name[-1] == "y":
+  if name[-2:] == "ie" or name[-1] == "y": # Just if last letter is 'ie'
     features["last_ie"] = True
   else:
     features["last_ie"] = False
-  if name[-1] == "k":
+  if name[-1] == "k": # Just if last letter is 'k'
     features["last_k"] = True
   else:
     features["last_k"] = False
@@ -404,7 +387,7 @@ train_set = [(g_features3(n), g) for (n,g) in train_names]
 test_set = [(g_features3(n), g) for (n,g) in test_names]
 classifier = nltk.NaiveBayesClassifier.train(train_set)
 print(nltk.classify.accuracy(classifier, test_set))
-classifier.show_most_informative_features(5)
+classifier.show_most_informative_features(5) # Ended up getting worse. Accuracy went down.
 
 
 
