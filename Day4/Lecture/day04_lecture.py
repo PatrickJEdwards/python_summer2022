@@ -54,7 +54,7 @@
 
 # We (mainly) use two modules: urllib and BeautifulSoup
 
-# pip3 install beautifulsoup4
+# !pip3 install beautifulsoup4
 from bs4 import BeautifulSoup
 import urllib.request
 
@@ -84,7 +84,7 @@ print(soup.prettify()) # enable us to view how tags are nested in the document
 # Find all cases of a certain tag 'a'
 soup.find_all('a') ## 'a' tags are used in links usually.
 # Find all cases of a certain tag 'h3'
-soup.find_all('h3') 
+soup.find_all('h3')
 # Returns a list... remember this!
 
 # We can extract all text with a certain tag
@@ -112,12 +112,17 @@ soup.find('a').attrs
 
 # We can use a loop to get all the data
 l = {"class" : [], "href" : []} # create a dictionary
-for p in range(20,43):
-  #try:
-    # extract all attrs 'class' from the all_a_tags
-    l["class"].append(all_a_tags[p].attrs["class"]) 
-    # extract all attrs 'href' from the all_a_tags
-    l["href"].append(all_a_tags[p].attrs["href"]) 
+for p in range(0, len(all_a_tags) - 1):
+    try:
+        # extract all attrs 'class' from the all_a_tags
+        l["class"].append(all_a_tags[p].attrs["class"])
+    except:
+        l["class"].append(None)
+        # extract all attrs 'href' from the all_a_tags
+    try:
+        l["href"].append(all_a_tags[p].attrs["href"])
+    except:
+        l["href"].append(None)
 print(l)
 
 # We can check all the attrs, using keys()
@@ -313,7 +318,7 @@ import sys
 import os
 
 # Set WD
-os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day4\\Lecture')
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day4\\Lecture')
 
 # Read all lines as one string
 with open('readfile.txt') as f:

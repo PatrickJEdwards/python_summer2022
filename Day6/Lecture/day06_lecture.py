@@ -8,7 +8,7 @@
 # First Instructor: Matt Dickenson
 
 import os
-os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
 
 #---------- APIs ----------#
 
@@ -287,12 +287,12 @@ joe_20[0]
 # Screen names
 [f.screen_name for f in joe_20]
 
-# up to 200 (limit)
+# up to 200 (limit). Can't do more than 200 at a time.
 joe_200 = api.followers(joe.id, count = 200) ## up to 200
 [f.screen_name for f in joe_200]
 len(joe_200)
 
-# A more round-about way, look up each user
+# A more round-about way to look up followers, look up each user id.
 joe_5000 = joe.followers_ids() #creates a list of user ids - up to 5000
 len(joe_5000)
 joe_5000[0]
@@ -306,22 +306,27 @@ for follower_id in joe.followers_ids()[0:2500]:
 		else: 
 			print(user.location)
 	except:
-		time.sleep(15*60)
+		time.sleep(15*60) # Sleep. Not because its twitter (twitter expects data scraping so they have a built in throttle).
+        # But you might want to add in sleep to slow down how quickly you hit your rate limit.
+        
 
 # Normally count = 200 is limit, let's go around that.
 
 # By default, each method returns the first page, 
 # which usually contains a few dozen items.
 # We can define the pagination manually to get more results
-joe_statuses = []
+joe_statuses = [] # Initiate an empty list.
 for p in range(0, 10):
  	# extend gets the entire tweet
 	joe_statuses.extend(api.user_timeline(id = 'JoeBiden', page = i, count = 20))
+    # This loops it over to get the entire tweet.
 
+# Look at Joe's most recent status.
 joe_statuses[0].text
 joe_statuses[len(joe_statuses)-1].text
 
-# # How was it tweeted?
+# How was it tweeted? 
+# This shows that it was twitter for iphone. But for hte most part they're using a platform called 'sprout social'
 source = [x.source for x in joe_statuses]
 source
 
@@ -331,6 +336,8 @@ source
 
 # Cursor performs pagination easily for you
 # iterate through the first 20 statuses in the timeline
+# Picks up tweets that happened in the past.
+# Pick up 20 tweets by Joe Biden. You get most recent tweet.
 histweets20 = [] ## tweet objects
 for status in tweepy.Cursor(api.user_timeline, id = 'JoeBiden').items(20):
     histweets20.append(status)    
@@ -341,9 +348,11 @@ histweets50 = [] ## tweet objects
 for status in tweepy.Cursor(api.user_timeline, id = 'JoeBiden').items(50):
     histweets50.append(status)    
 len(histweets50)
+# Show what the tweets are using the zip module.
 set(zip([i.text for i in histweets50],[j.created_at for j in histweets50]))
 
 # iterate through all of the status...although this is a little sketchy and unrealiable
+# She's never seen this actually work. It really truly is unstable in the words of annamaria.
 histweets = [] ## tweet objects
 for status in tweepy.Cursor(api.user_timeline, id = 'JoeBiden').items():
     histweets.append(status)
