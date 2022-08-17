@@ -69,7 +69,7 @@ import random
 import time
 
 # Actual csv input.
-with open("HW02_Answers.csv", "w", newline='') as f:
+with open("HW02_Answers.csv", "w", newline='', encoding="utf-8") as f:
     w = csv.DictWriter(f, fieldnames = ("date", "title", "text", "citation", "footnote"))
     w.writeheader()
     # Create correct URL with 625 speeches.
@@ -81,7 +81,7 @@ with open("HW02_Answers.csv", "w", newline='') as f:
     # open and parse website.
     web_page = urllib.request.urlopen(goal_url)
     del goal_url
-    soup = BeautifulSoup(web_page.read())
+    soup = BeautifulSoup(web_page.read(), features="lxml")
     del web_page
     # Isolate individual remarks.
     divtags = soup.find_all("div", {"class" : "views-row"})
@@ -124,7 +124,7 @@ with open("HW02_Answers.csv", "w", newline='') as f:
             remark["citation"] = "NA"
             w.writerow(remark)
             continue
-        remark_html = BeautifulSoup(remark_page.read())
+        remark_html = BeautifulSoup(remark_page.read(),features="lxml")
         
 ###     2E. Collect 'full text of address/remarks' information.
         remark["text"] = remark_html.find_all("div", {"class" : "field-docs-content"})[0].text[1:]
@@ -141,8 +141,11 @@ with open("HW02_Answers.csv", "w", newline='') as f:
         except:
             remark["footnote"] = "NA"
             continue
-        w.writerow(remark)
-        time.sleep(random.uniform(1, 3)) # be polite, sleep!
+        try:
+            w.writerow(remark)
+        except UnicodeEncodeError:
+            pass
+        time.sleep(random.uniform(1, 2)) # be polite, sleep!
 print("ALL DONE!")
 
 
