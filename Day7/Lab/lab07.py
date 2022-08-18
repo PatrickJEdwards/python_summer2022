@@ -1,3 +1,5 @@
+#%%
+
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, and_, or_
@@ -112,26 +114,53 @@ session.add_all([t1, t2, t3, t4, t5, t6, t7, t8])
 session.commit()
 
 # Some example querying 
-for town in session.query(Town).order_by(Town.id):
-  print(town.id, town.name, town.population)
+#for town in session.query(Town).order_by(Town.id):
+#  print(town.id, town.name, town.population)
 
 
+#%%
 
 # TODO: 
 # 1. Display, by department, the cities having
 #    more than 50,000 inhabitants.
+for town in session.query(Town).join(Department).filter(Town.population > 50000).order_by(Department.deptname).distinct():
+    print(town.department.deptname, town.name, town.population)
 
+
+#%%
 
 # 2. Display the towns with the minimum population in each region
 # print town name, population, region name
 # Hint: subqueries
 
+from sqlalchemy import func
+sub = session.query(func.min(Town.population).label("min")).join(Department).join(Region).group_by(Region.name).subquery()
+
+
+for town in session.query(Town).join(Department).join(Region).filter(sub.c.min == Town.population):
+    print(town.name, town.population)
+
+
+
+
+
+#%%
 
 # 3. Display the total number of inhabitants
 #    per department using only a query (no lists!)
 
-  
+from sqlalchemy import func
+sub = session.query(func.sum(Town.population).label("sum")).join(Department).group_by(Department).subquery()
 
+for department in session.query(Department).filter(sub.c.sum == population):
+    print(Department.deptname, population)
+
+
+#%%
+# Drop tables when reloading (to avoid duplicates).
+Town.__table__.drop(engine)
+Department.__table__.drop(engine)
+Region.__table__.drop(engine)
 
 
 

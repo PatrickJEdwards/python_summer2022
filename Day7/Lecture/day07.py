@@ -8,7 +8,7 @@
 # First Instructor: Matt Dickenson
 
 import os
-os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day7\\Lecture')
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day7\\Lecture')
 
 # What is a Database?
 #   - A database is a collection of information that is organized so 
@@ -43,7 +43,7 @@ os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day7\\Lecture'
 
 #---------- Using sql with Python ----------#
 
-# pip install sqlalchemy
+# !pip install sqlalchemy
 
 # Check: http://pythoncentral.io/introductory-tutorial-python-sqlalchemy/
 # To find documentation: https://www.kite.com/python/docs/
@@ -53,9 +53,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, and_, or_, distinct
 from sqlalchemy.orm import relationship, backref, sessionmaker
 
+# This lecture spend much of lecture on creating/navigating database.
+# This lecture pend less time on how to get stuff out of database.
+### MORE IMPORTANT PIECE: getting stuff out of database.
+
 # - Connect to the local database
 # - The return value of create_engine() is an instance of Engine,
-#   and it represents the core interface to the database
+#   and it represents the core interface between Python and the database
 # - It is how SQLAlchemy communicates with our database.
 # - We could use it to talk to the database directly,
 #   but we'd rather use a Session object to work with
@@ -65,29 +69,30 @@ engine = sqlalchemy.create_engine('sqlite:///players.db', echo=True)
 
 # The attribute echo=True will make SQLAlchemy log all SQL
 # commands it is doing while you apply commands.
-# The database will be intact, until you execute the commands
+# The database will be intact, until you use the session object
+# to execute the commands
 
 
 # - ORM: object relational mapping (https://en.wikipedia.org/wiki/Object%E2%80%93relational_mapping)
 # - No need to write raw SQL! Instead interact with SQL using Python language.
+#### - Though SQL at its basic language level is quite simple. Don't be intimidated.
 # - It converts data between incompatible type systems
 # - Uses class-like syntax to do three things at once:
 #     1. describe database table
 #     2. define our own python class object
 #     3. "mapper" to map the python object to SQL table
-# - All done together using Declarative system
+# - All done together using Declarative system (see declarative base below)
 # - In other words, creates classes that include directives
 #   to describe the actual database table they will be mapped to
 # - Classes mapped using the Declarative system are 
 #   defined in terms of a Base class
-# - Base class maintains a catalog of classes and tables 
-#   relative to that base
+# - Base class maintains a catalog of classes and tables relative to that base
 # More information: https://stackoverflow.com/questions/1279613/what-is-an-orm-how-does-it-work-and-how-should-i-use-one
 
 # Instantiate a Base
-Base = declarative_base() 
+Base = declarative_base()
 
-# Each class is a table in our db
+# Each class is a table in our database
 # Each attribute will be a column in the table
 
 # Define some schemas (The blueprint)
@@ -105,9 +110,9 @@ class Player(Base):
   ## primary_key is unique, non-nullable identifier for row
   ## Have an ID column because player attributes (name, etc) are not unique
   ## At least 1 primary_key per table
-  id = Column(Integer, primary_key = True) 
-  name = Column(String)
-  number = Column(Integer)
+  id = Column(Integer, primary_key = True) # Player ID
+  name = Column(String) # Player name
+  number = Column(Integer) # Player number
   
   ## ForeignKey tells us we have a relationship with another table ("teams") by the ("id") variable
   ## This info constrained to only come from that table
@@ -120,6 +125,7 @@ class Player(Base):
     self.number = number
     self.team = team
     
+  ## Way for it to print information when we have stuff in the table.
   def __repr__(self):
     return "<Player('%s', '%s')>" % (self.name, self.number)
 
@@ -135,11 +141,13 @@ class Team(Base):
   ## - Note: this is NOT a column
   ##          but we can call <team obj>.players
   ##          or <player obj>.team
+  ## Has a relationship to the 'players' table via 'team'
   players = relationship("Player", backref="team")
   
   def __init__(self, name):
     self.name = name
   
+  # Print option.
   def __repr__(self):
     return "<team('%s')>" % (self.name)
     
@@ -159,11 +167,12 @@ Team.__table__
 
 # Very similar syntax to what we've done before with class definitions!
 # One instance for each table
+# Player with name Joey who has player number 27.
 p1 = Player(name = "Joey", number = 27)
 t1 = Team(name = "WashU")
 # add team reference to player 
 p1.team = t1
-# now a part of team object
+# now player Joey is a part of team object
 t1.players
 p1.team
 
@@ -187,6 +196,8 @@ print(mason.id)
 #   all the objects and associations we have created. The Session will hold
 #   objects/associations until we commit or close
 
+# Use session to commit the 'id' attribute.
+# Until we use session to commit, it just holds the object attributes.
 Session = sessionmaker(bind = engine)
 session = Session()
 
@@ -215,13 +226,15 @@ print('ID: ' + str(p1.id))
 
 # Some querying
 # order the results
+# Use query method from session, and use Player method to get information.
+# You can sort it using '.order_by', in this case ordering by player number.
 # you can think of it as... session.query(TABLE).order_by(COLUMN)
 for player in session.query(Player).order_by(Player.number):
   print(player.number, player.name, player.id)
   
 # limit the results
-# 1. orders by number
-# 2. grab by index
+# 1. orders by number (player's automatically created ID number)
+# 2. grab by index (in this case, only get first 3 player numbers.)
 for player in session.query(Player).order_by(Player.id)[0:3]:
   print(player.number, player.name, player.id)
 
@@ -234,11 +247,13 @@ for player in session.query(Player).filter(Player.name != "Mason Plumlee").order
   print(player.number, player.name)
 
 # or_()
+## Looks for any player that has the name 'Mason Plumlee' and 'Miles Plumlee'.
 for player in session.query(Player).filter(or_(Player.name == "Mason Plumlee", Player.name == "Miles Plumlee")).order_by(Player.number):
   print(player.number, player.name)
   
 # .like()
 # return all the rows with 'name' column contains the partial string "Plum"
+## Use this if there are mistakes in the inputs that you want to capture.
 for player in session.query(Player).filter(Player.name.like("%Plum%")).order_by(Player.number):
   print(player.number, player.name)
 
@@ -256,6 +271,7 @@ for player in session.query(Player.name, Player.number, func.max(Player.number))
 
 
 # Results can be indexed as lists
+# If we're looking for all the players with a name like 'PlumLee' and a number greater than 10:
 results = session.query(Player).filter(and_(Player.name.like("%Plumlee%"), Player.number > 10)).order_by(Player.number)
 results.first()
 results[0]
@@ -283,22 +299,28 @@ mason.team
 mason.team.players
 
 # Now note the id:
+    # First, commit changes.
 session.commit()
 mason.team_id
 
 # Lets load the two things together
 # query(TABLE1, TABLE2)
+# Filter so that player name is "mason plumlee" and team is 'duke'. 
+# Then order by player.number.
 for player, team in session.query(Player, Team).filter(Player.name == "Mason Plumlee").filter(Team.name == "Duke").order_by(Player.number):
   print(player.number, player.name, team.name)
 
 # or,
 # query(TABLE1).join(TABLE2)
+# Then you can avoid some of the duplicates that you would get from a cross join.
 for i in session.query(Player).join(Team).filter(Player.name == "Mason Plumlee").filter(Team.name == "Duke").order_by(Player.number):
-  print(i.number, i.name, i.team.name)
+  print(i.number, i.name, i.team.name) # Notice there are fewer results.
 
 # we can join and execute functions using subquery, e.g. the highest number by team
 sub = session.query(func.max(Player.number).label('max')).join(Team).group_by(Team.name).subquery()
 
+# Filter based on the above subquery that makes this only includes the 
+# results that match the maximum number by team.
 for player in session.query(Player).join(Team).filter(sub.c.max == Player.number):
   print(player.name, player.number, player.team.name)
 
@@ -309,42 +331,47 @@ session.query(Player).filter(Player.number == 30).count()
 
 # query 1 player
 # now we have the representation of him
+# Creates new player named Seth
 seth = session.query(Player).filter(Player.number == 30).first()
 
-# now we can delete him
+# now we can delete player Seth
 session.delete(seth)
 
 # he's gone!
 session.query(Player).filter(Player.number == 30).count()
 session.query(Player).filter(Player.name.like("%Seth%")).count()
 
-# But he is still in our object players
+# But Seth is still in our object players
 players
 players = session.query(Player).all()
 players 
 
 
 # Updating
+# Recall we created player called 'other_plumlee'.
 other_plumlee = players[4]
+# We change his name to 'Marshall Plumlee'
 other_plumlee.name = "Marshall Plumlee"
 
 # The Session is paying attention!
 session.dirty
-# Instances are considered dirty when they were modified but not deleted
+# Instances are considered dirty when they were modified but not deleted.
 
 # commit our changes
 session.commit()
-session.dirty
+session.dirty # Now it's an empty list.
 
 
-# print IDs 
+# print player IDs since we've now committed everybody.
 [p.id for p in players]
 
 
+# Can still add people
 # Add Annamaria
 annamaria = Player(name = "Annamaria", number = 9)
 session.add(annamaria)
 
+# Then commit this change (new player Annamaria).
 session.commit()
 
 # How to convert data to csv
@@ -355,6 +382,7 @@ for player in players:
 
 # Example:
 import csv
+# Write into csv just like how we did in the homework.
 with open("players.csv", 'w') as f:
     my_writer = csv.DictWriter(f, fieldnames = ("name", "number", "team"))
     my_writer.writeheader()
@@ -387,6 +415,7 @@ with open("players.csv", 'w') as f:
 
 
 # Connect to the local database
+# i.e., create new instance of engine.
 engine = sqlalchemy.create_engine('sqlite:///books.db', echo=True)
 
 # Declare Base
@@ -396,13 +425,15 @@ Base = declarative_base()
 class Book(Base):
     __tablename__ = 'books'
     
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
+    id = Column(Integer, primary_key=True) # book ID.
+    name = Column(String) # name of book.
     main_character = Column(String)
     year = Column(Integer)
     ## how will this table speak to other tables?
-    author_id = Column(Integer, ForeignKey('authors.id'))
+    author_id = Column(Integer, ForeignKey('authors.id')) # author_id is how it will relate to other tables.
     
+    # Constructor:
+    ## Defaults so that the main_character and year are None if no inputs provided.
     def __init__(self, name, main_character=None, year=None):
       self.name = name
       self.main_character = main_character
@@ -472,7 +503,7 @@ print(author1.books)
 print(country1.authors)
 
 
-# Create a session to actually store things in the db
+# Create a session to actually store things in the database.
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -481,7 +512,7 @@ session.add(book1)
 session.add(author1)
 session.add(country1)
 
-# change db
+# change database by committing changes.
 session.commit()
 
 
@@ -511,7 +542,9 @@ for a in session.query(Author):
 for row in session.query(Book, Author):
     print(row)
 # Wait, Dickens wrote tale of two cities. 
-# The information from Author is recycled 
+# The information from Author is recycled (like in R)
+## Unless you are 100% positive that both line up 1:1, Annamaria recommends
+## using the '.join()' option to avoid recycling like this.
   
 # Using .join, we can print books with authors
 for book in session.query(Book).join(Author):
@@ -524,6 +557,7 @@ author2 = Author('dickens')
 book3.author = author2
 for book in session.query(Book).join(Author):
     print(book.name, book.author.name)
+# We now have all three of our books with matching authors.
 
 
 # Copyright of the original version:
