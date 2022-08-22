@@ -207,6 +207,7 @@ bogo_sort(my_numbers2)
 
 #---------- Complexity ----------#
 
+# Favorite question on technical interviews.
 # The amount of time/the number of operations need to complete a task.
 # O(n) notation:
 #   - Big-O notation is a relative representation of the complexity of 

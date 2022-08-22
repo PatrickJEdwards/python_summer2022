@@ -152,8 +152,8 @@ for town in session.query(Town).join(Department).join(Region).filter(sub.c.min =
 from sqlalchemy import func
 sub = session.query(func.sum(Town.population).label("sum")).join(Department).group_by(Department).subquery()
 
-for department in session.query(Department).filter(sub.c.sum == population):
-    print(Department.deptname, population)
+for dept in session.query(Department.deptname, sqlalchemy.func.sum(Town.population).label('inhab')).join(Department).group_by(Department.deptname):
+    print(dept.deptname, dept.inhab)
 
 
 #%%

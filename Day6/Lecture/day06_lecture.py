@@ -7,6 +7,8 @@
 #					    David Carlson, and Betul Demirkaya
 # First Instructor: Matt Dickenson
 
+#%%
+
 import os
 os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
 
@@ -61,12 +63,18 @@ os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture'
 
 import importlib # to import file
 
+
+#%%
+
+
 #---------- Spotify API ----------#
 
-# pip install spotipy
+# Reset working directory to location of APIs in computers.
+os.chdir('C:\\Users\\edwar\\Documents\\6. Academic\\APIs')
+# !pip install spotipy
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
-import start_spotify22 as start_spotify
+import start_spotify as start_spotify
 # https://spotipy.readthedocs.io/en/2.19.0/
 
 
@@ -75,6 +83,9 @@ import start_spotify22 as start_spotify
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=start_spotify.client_id,
                                                client_secret= start_spotify.client_secret,
                                                redirect_uri=start_spotify.redirect_url))
+
+# Reset working directory to python lecture location.
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
 
 # Search for an artist on the website, e.g. Taylor Swift
 taylor = sp.artist('06HL4z0CvFAxyc27GXpf02') #artist query
@@ -125,16 +136,24 @@ one = sp.audio_features('0DiWol3AO6WpXZgp0goxAV')
 one[0]
 
 
+#%%
+
+
 #---------- Google Maps API ----------#
 
-
-# pip install googlemaps
+# Reset directory to location of APIs in computers.
+os.chdir('C:\\Users\\edwar\\Documents\\6. Academic\\APIs')
+# !pip install googlemaps
 
 # Navigate to https://console.developers.google.com/apis/credentials?project=_
 # Create a project, go to library, then enable geocoding and distance matrix APIs
 
 # Import items from file
 imported_items = importlib.import_module('start_google')
+
+# Reset working directory to python lecture location.
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
+
 
 # Copy client to an object named gmaps
 gmaps = imported_items.client
@@ -176,7 +195,7 @@ print(distance['rows'][0]['elements'][0]['distance']['text'])
 
 # Plotting in Google Maps
 # More information on https://github.com/vgm64/gmplot
-# pip install gmplot
+# !pip install gmplot
 
 from gmplot import gmplot
 google_key = imported_items.api_key
@@ -218,17 +237,27 @@ plot1.scatter(lats = attraction_lats, lngs = attraction_lons,
 	marker = True)
 
 # Draw the plot
-plot1.draw('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture\\my_map.html')
+plot1.draw('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture\\my_map.html')
+
+
+
+#%%
 
 
 #---------- Twitter API ----------#
 
-# pip install tweepy
+# Reset directory to location of APIs in computer.
+os.chdir('C:\\Users\\edwar\\Documents\\6. Academic\\APIs')
+# !pip install tweepy
 import tweepy
 # https://docs.tweepy.org/en/v4.10.0/api.html
 
 twitter = importlib.import_module('start_twitter')
 api = twitter.client
+
+# Reset directory to python lecture location.
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day6\\Lecture')
+
 
 # See rate limit
 limit = api.rate_limit_status()
@@ -243,14 +272,14 @@ for i in limit["resources"]["tweets"].keys():
 	print(limit["resources"]["tweets"][i]) ## another dictionary!
 
 # Create user objects
-joe = api.get_user('@JoeBiden')
+joe = api.get_user(screen_name = '@JoeBiden')
 joe # biiiig object 
 
 # reverse_geocode and geocode:
 #   searches for up to 20 places that can be used as a place_id when updating a status
 api.reverse_geocode(lat = 33.748783, long =  -84.388168) # Capitol building in Atlanta, Georgia
 # looking for mentions of traffic on twitter within 10 miles of capitol building
-s = api.search('traffic', geocode = '33.748783,-84.388168,10mi', since_id = '2021-01-01', count = 100)
+s = api.search_tweets('traffic', geocode = '33.748783,-84.388168,10mi', since_id = '2021-01-01', count = 100)
 len(s)
 
 s[90].created_at
@@ -288,26 +317,28 @@ joe_20[0]
 [f.screen_name for f in joe_20]
 
 # up to 200 (limit). Can't do more than 200 at a time.
-joe_200 = api.followers(joe.id, count = 200) ## up to 200
+joe_200 = api.get_followers(user_id = joe.id, count = 200) ## up to 200
 [f.screen_name for f in joe_200]
 len(joe_200)
 
 # A more round-about way to look up followers, look up each user id.
-joe_5000 = joe.followers_ids() #creates a list of user ids - up to 5000
+joe_5000 = joe.get_follower_ids() #creates a list of user ids - up to 5000
 len(joe_5000)
 joe_5000[0]
 
+import time
+
 # Get followers geo location
-for follower_id in joe.followers_ids()[0:2500]:
+for follower_id in joe.follower_ids()[0:2500]:
 	try:
-		user = api.get_user(follower_id)
+		user = api.get_user(user_id = follower_id)
 		if user.location == '':
 			print('Not available')
 		else: 
 			print(user.location)
 	except:
 		time.sleep(15*60) # Sleep. Not because its twitter (twitter expects data scraping so they have a built in throttle).
-        # But you might want to add in sleep to slow down how quickly you hit your rate limit.
+        #But you might want to add in sleep to slow down how quickly you hit your rate limit.
         
 
 # Normally count = 200 is limit, let's go around that.
@@ -318,7 +349,7 @@ for follower_id in joe.followers_ids()[0:2500]:
 joe_statuses = [] # Initiate an empty list.
 for p in range(0, 10):
  	# extend gets the entire tweet
-	joe_statuses.extend(api.user_timeline(id = 'JoeBiden', page = i, count = 20))
+	joe_statuses.extend(api.user_timeline(user_id = 'JoeBiden', page = i, count = 20))
     # This loops it over to get the entire tweet.
 
 # Look at Joe's most recent status.
