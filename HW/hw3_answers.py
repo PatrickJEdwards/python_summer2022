@@ -419,33 +419,39 @@ dup_tick = 0
 # SECOND FOR-LOOP: for each WUSTL follower, collect their followers and status counts.
 ## Create OUTER for-loop:      
 for i in wps_follower_ids:
-    # Update ticker2_outer (WUSTL followers).
-    ticker2_outer += 1
-    # Reset ticker2_inner to zero.
-    ticker2_inner = 0
-    # Print statement informing which WUSTL follower I'm on.
-    print(f"{ticker2_outer} of {len(wps_follower_ids)} WUSTL followers.")
-    # Create user object for WUSTL follower 'i'
-    user_outer = api.get_user(user_id = i)
-    # Gather list of WUSTL follower 'i' followers.
-    follower_list = user_outer.follower_ids()
-    # Create INNER for-loop:
-    for j in follower_list:
-        # Update ticker2_inner (followers of WUSTL followers).
-        ticker2_inner += 1
-        # Print statement on progress.
-        print(f"WUSTL FOLLOWER: {ticker2_outer} of {len(wps_follower_ids)} \nFOLLOWER'S FOL: {ticker2_inner} of {len(follower_list)}")
-        # Check if follower already in ID list. Skip if already included.
-        if j in ffp.keys():
-            # Print that one is duplicated.
-            print(f"{ticker2_outer}:{ticker2_inner} is duplicate.")
-            # Update duplicate ticker.
-            dup_tick += 1
+    try:
+        # Update ticker2_outer (WUSTL followers).
+        ticker2_outer += 1
+        # Reset ticker2_inner to zero.
+        ticker2_inner = 0
+        # Print statement informing which WUSTL follower I'm on.
+        print(f"{ticker2_outer} of {len(wps_follower_ids)} WUSTL followers.")
+        # Create user object for WUSTL follower 'i'
+        user_outer = api.get_user(user_id = i)
+        # Gather list of WUSTL follower 'i' followers.
+        follower_list = user_outer.follower_ids()
+        # Create INNER for-loop:
+        try:
+            for j in follower_list:
+                # Update ticker2_inner (followers of WUSTL followers).
+                ticker2_inner += 1
+                # Print statement on progress.
+                print(f"WUSTL FOLLOWER: {ticker2_outer} of {len(wps_follower_ids)} \nFOLLOWER'S FOL: {ticker2_inner} of {len(follower_list)}")
+                # Check if follower already in ID list. Skip if already included.
+                if j in ffp.keys():
+                    # Print that one is duplicated.
+                    print(f"{ticker2_outer}:{ticker2_inner} is duplicate.")
+                    # Update duplicate ticker.
+                    dup_tick += 1
+                    continue
+                # Create user object for follower of WUSTL follower.
+                user_inner = api.get_user(user_id = j)
+                # Add follower of WUSTL follower 'j' + status count to ID list.
+                ffp[j] = user_inner.statuses_count
+        except:
             continue
-        # Create user object for follower of WUSTL follower.
-        user_inner = api.get_user(user_id = j)
-        # Add follower of WUSTL follower 'j' + status count to ID list.
-        ffp[j] = user_inner.statuses_count
+    except:
+        continue
         
 # Find user ID with most statuses.
 most_active_follower_ID = max(ffp, key=ffp.get)
@@ -535,33 +541,39 @@ dup_tick = 0
 # SECOND FOR-LOOP: for each WUSTL friend, collect their followers and status counts.
 ## Create OUTER for-loop:      
 for i in wps_friend_ids:
-    # Update ticker2_outer (WUSTL friends).
-    ticker2_outer += 1
-    # Reset ticker2_inner to zero.
-    ticker2_inner = 0
-    # Print statement informing which WUSTL friend I'm on.
-    print(f"{ticker2_outer} of {len(wps_friend_ids)} WUSTL friends.")
-    # Create user object for WUSTL friend 'i'
-    user_outer = api.get_user(user_id = i)
-    # Gather list of WUSTL friend 'i' friends.
-    friend_list = user_outer()
-    # Create INNER for-loop:
-    for j in friend_list:
-        # Update ticker2_inner (friends of WUSTL friends).
-        ticker2_inner += 1
-        # Print statement on progress.
-        print(f"WUSTL FRIEND: {ticker2_outer} of {len(wps_friend_ids)} \nFRIEND'S FREN: {ticker2_inner} of {len(friend_list)}")
-        # Check if friend already in ID list. Skip if already included.
-        if j in friendfriendpop.keys():
-            # Print that one is duplicated.
-            print(f"{ticker2_outer}:{ticker2_inner} is duplicate.")
-            # Update duplicate ticker.
-            dup_tick += 1
+    try:
+        # Update ticker2_outer (WUSTL friends).
+        ticker2_outer += 1
+        # Reset ticker2_inner to zero.
+        ticker2_inner = 0
+        # Print statement informing which WUSTL friend I'm on.
+        print(f"{ticker2_outer} of {len(wps_friend_ids)} WUSTL friends.")
+        # Create user object for WUSTL friend 'i'
+        user_outer = api.get_user(user_id = i)
+        # Gather list of WUSTL friend 'i' friends.
+        friend_list = user_outer()
+        # Create INNER for-loop:
+        try:
+            for j in friend_list:
+                # Update ticker2_inner (friends of WUSTL friends).
+                ticker2_inner += 1
+                # Print statement on progress.
+                print(f"WUSTL FRIEND: {ticker2_outer} of {len(wps_friend_ids)} \nFRIEND'S FREN: {ticker2_inner} of {len(friend_list)}")
+                # Check if friend already in ID list. Skip if already included.
+                if j in friendfriendpop.keys():
+                    # Print that one is duplicated.
+                    print(f"{ticker2_outer}:{ticker2_inner} is duplicate.")
+                    # Update duplicate ticker.
+                    dup_tick += 1
+                    continue
+                # Create user object for friend of WUSTL friend.
+                user_inner = api.get_user(user_id = j)
+                # Add follower of WUSTL friend 'j' + status count to ID list.
+                friendfriendpop[j] = user_inner.statuses_count
+        except:
             continue
-        # Create user object for friend of WUSTL friend.
-        user_inner = api.get_user(user_id = j)
-        # Add follower of WUSTL friend 'j' + status count to ID list.
-        friendfriendpop[j] = user_inner.statuses_count
+    except:
+        continue
         
 # Find user ID with most statuses.
 most_active_friend_ID = max(friendfriendpop, key=friendfriendpop.get)
