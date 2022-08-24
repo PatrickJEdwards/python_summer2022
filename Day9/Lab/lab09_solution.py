@@ -1,60 +1,70 @@
 """Data Structures Working with Graphs/Networks"""
 
-# EXAMPLE: link nodes into a ring
-# Function to link 2 nodes (not in the sense of last script)
+## Function to link 2 nodes (not in the sense of last script)
 def makeLink(G, node1, node2):
   if node1 not in G:
     G[node1] = {}
-  G[node1][node2] = True
+  (G[node1])[node2] = True
   if node2 not in G:
     G[node2] = {}
-  G[node2][node1] = True
+  (G[node2])[node1] = True
   return G 
 
-graph = {}
-graph = makeLink(graph, "a", "b")
-graph
-
-# empty graph 
+## empty graph 
 ring = {} 
 
-# number of nodes 
+## number of nodes 
 n = 5 
 
-# Add in edges with makeLink function
+## Add in edges with makeLink function
 for i in range(n):
   ring = makeLink(ring, i, (i+1)%n)
-  print(ring)
+  print (ring)
 
-print(ring)
-# 4 = 0 = 1 = 2 = 3 = 4
+print (ring)
 
-# How many nodes?
-print(len(ring))
+## How many nodes?
+print (len(ring))
 
-# How many edges?
-print(sum([len(ring[node]) for node in ring.keys()])/2)
+## How many edges?
+print (sum([len(ring[node]) for node in ring.keys()])/2 )
 
 
 ## Grid Network
-## TODO: create a square graph with 9 nodes using the makeLink function (from above)
-## Example: https://www.researchgate.net/profile/Mehdi-Zaferanieh/publication/344188550/figure/fig2/AS:940265934184449@1601188276248/The-grid-network-with-9-nodes_Q320.jpg
-
+## TODO: create a square graph with 9 nodes using the makeLink function
 ## TODO: define a function countEdges
 
-# You may want to use the module math
-import math 
+import math
+n = 9
+g = {}
+for i in range(1,n):
+  n_width = int(math.sqrt(n))
+  ## if we are not on a boundary
+  ## i.e., if node is not multiple of our set node width
+  ## then link to next node
+  if i%n_width != 0:
+    makeLink(g, i, i+1)
+  ## if not on last row
+  ## link to node directly below
+  if i <= n-n_width:
+    makeLink(g, i, i+n_width)
+print(g)
 
+# 1--2--3
+# |  |  |
+# 4--5--6
+# |  |  |
+# 7--8--9
 
+def count_edges(graph):
+  ## apply len function to each element of graph (how many connections)
+  ## sum up all connections
+  ## divide by 2 since each counted twice in graph (1->2 and 2<-1)
+  return sum(map(len, graph.values()))/2
 
-
-
-
-
-
+count_edges(g)
 
 ##  Social Network
-# some set-up:
 class Actor(object):
   def __init__(self, name):
     self.name = name 
@@ -85,6 +95,8 @@ movies = makeLink(movies, ah, jr) # Valentine's Day
 
 
 
+
+
 def findPath(graph, start, end, path=[]):
     ## create list
     path = path + [start]
@@ -103,7 +115,10 @@ def findPath(graph, start, end, path=[]):
     return findPath(graph, node, end, path)
 
 
-print(findPath(movies, jr, ms))
+print (findPath(movies, jr, ms))
+
+for i in movies[jr]:
+    print(i)
 
 ## start with julia roberts 
 ## who is she directly connected to?
@@ -125,16 +140,33 @@ movies[kb].keys() ## found meryl streep!
 ## for path in allPaths:
 ##   print path
 
+def findAllPaths(graph, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return [path]
+        if start not in graph:
+            return None
+        allpaths = []
+        for node in graph[start]:
+            if node not in path:
+                allpaths.extend(findAllPaths(graph, node, end, path))
+        allpaths = filter(None, allpaths)
+        return allpaths
 
+allpaths = findAllPaths(graph = movies, start = jr, end = ms)
 
-
+for path in allpaths:
+  print (path)
 
 
 ## TODO: implement findShortestPath() to print shorest path between actors
 ## print findShortestPath(movies, ms, ss)
 
+def findShortestPath(graph, start, end):
+    allpaths = findAllPaths(graph, start, end)
+    return min(allpaths, key = len)
 
-
+findShortestPath(movies, jr, ms)
 
 
 
