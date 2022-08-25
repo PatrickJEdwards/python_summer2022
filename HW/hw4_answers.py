@@ -17,6 +17,7 @@ import random
 import time
 import timeit
 import matplotlib.pyplot as plt
+from scipy.ndimage.filters import gaussian_filter1d
     
 
 #%% TEST CASE.
@@ -119,7 +120,7 @@ def CountingSort(list1):
 #%% Run simulations for both functions.
 
 # Choose N: maximum size of unsorted list.
-N = 100
+N = 2000
 
 # Create list of 'N' unsorted lists in increasing sizes.
 
@@ -157,28 +158,84 @@ del(size)
 
 # DIFFERENTIAL SCALES graph.
 bubble_simtime_scaled = [x * 10 for x in bubble_simtime] # 1/10 seconds, or decisecond
-counting_simtime_scaled = [x * 1000 for x in counting_simtime] #1/1000 second, or millisecond
+counting_simtime_scaled = [x * 100 for x in counting_simtime] #1/1000 second, or millisecond
 
 #%% GRAPH TIME vs. N.
 
 
-# TRUE SCALE GRAPH.
+# TRUE SCALE GRAPH - NOT SMOOTHED.
 
 ## Define x-axis (# elements in list).
 x1 = range(2, N)
 x2 = range(2, N)
 ## Define y-axis: time.
-y1 = bubble_simtime # bubble sort scaled.
-y2 = counting_simtime # counting sort scaled.
-# adjust the area around the plot
-##plt.subplots_adjust(left = .13, right = .95, top = .9, bottom = .3)
-# Plot scatterplot of each.
-plt.scatter(x1, y1) # Bubble scatter
-plt.scatter(x2, y2) # counting scatter
+y1 = bubble_simtime # bubble sort.
+y2 = counting_simtime # counting sort.
 # Actually plot the data connecting with lines.
 plt.plot(x1, y1) # Bubble lines
 plt.plot(x2, y2) # counting lines 
+# labels, titles, legend, etc.
+plt.legend(["Bubble Sort\n(Quadratic Time)", "Counting Sort\n(Linear Time)"])
+plt.ylabel("Run Time (Seconds)")
+plt.xlabel("Size of Input List")
+plt.title("How Algorithms Effect Runtime\n(UNSCALED, UNSMOOTHED)")
+plt.savefig('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\HW\\HW4_plot1.pdf')
 
 
-    
-    
+
+# UNSCALED SMOOTHED graph:
+
+x1 = range(2, N)
+x2 = range(2, N)
+## Define y-axis: time.
+## SMOOTHED using a gaussian filter.
+y1smoothed = gaussian_filter1d(bubble_simtime, sigma=2)
+y2smoothed = gaussian_filter1d(counting_simtime, sigma=2)
+# Actually plot the data connecting with lines.
+plt.plot(x1, y1smoothed) # Bubble lines
+plt.plot(x2, y2smoothed) # counting lines 
+# labels, titles, legend, etc.
+plt.legend(["Bubble Sort\n(Quadratic Time)", "Counting Sort\n(Linear Time)"])
+plt.ylabel("Run Time (Seconds)")
+plt.xlabel("Size of Input List")
+plt.title("How Algorithms Effect Runtime\n(UNSCALED, SMOOTHED)")
+plt.savefig('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\HW\\HW4_plot2.pdf')
+
+
+# SCALED NOT SMOOTHED graph.
+
+## Define x-axis (# elements in list).
+x1 = range(2, N)
+x2 = range(2, N)
+## Define y-axis: time.
+y1 = bubble_simtime_scaled # bubble sort.
+y2 = counting_simtime_scaled # counting sort.
+# Actually plot the data connecting with lines.
+plt.plot(x1, y1) # Bubble lines
+plt.plot(x2, y2) # counting lines 
+# labels, titles, legend, etc.
+plt.legend(["Bubble Sort\n(Quadratic Time)", "Counting Sort\n(Linear Time)"])
+plt.ylabel("Run Time\n(Bubble: 1/10 Sec, Counting: 1/100 Sec)")
+plt.xlabel("Size of Input List")
+plt.title("How Algorithms Effect Runtime\n(UNSCALED, UNSMOOTHED)")
+plt.savefig('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\HW\\HW4_plot3.pdf')
+
+
+# SCALED SMOOTHED graph.
+
+x1 = range(2, N)
+x2 = range(2, N)
+## Define y-axis: time.
+## SMOOTHED using a gaussian filter.
+y1smoothed = gaussian_filter1d(bubble_simtime_scaled, sigma=2)
+y2smoothed = gaussian_filter1d(counting_simtime_scaled, sigma=2)
+# Actually plot the data connecting with lines.
+plt.plot(x1, y1smoothed) # Bubble lines
+plt.plot(x2, y2smoothed) # counting lines 
+# labels, titles, legend, etc.
+plt.legend(["Bubble Sort\n(Quadratic Time)", "Counting Sort\n(Linear Time)"])
+plt.ylabel("Run Time\n(Bubble: 1/10 Sec, Counting: 1/100 Sec)")
+plt.xlabel("Size of Input List")
+plt.title("How Algorithms Effect Runtime\n(UNSCALED, SMOOTHED)")
+plt.savefig('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\HW\\HW4_plot4.pdf')
+
