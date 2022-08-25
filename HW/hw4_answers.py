@@ -120,7 +120,7 @@ def CountingSort(list1):
 #%% Run simulations for both functions.
 
 # Choose N: maximum size of unsorted list.
-N = 2000
+N = 1200
 
 # Create list of 'N' unsorted lists in increasing sizes.
 
