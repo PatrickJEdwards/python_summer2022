@@ -9,7 +9,7 @@ def makeLink(G, node1, node2):
   if node2 not in G:
     G[node2] = {}
   G[node2][node1] = True
-  return G 
+  return G
 
 graph = {}
 graph = makeLink(graph, "a", "b")
@@ -34,16 +34,41 @@ print(len(ring))
 
 # How many edges?
 print(sum([len(ring[node]) for node in ring.keys()])/2)
+del(i)
+del(n)
 
 
 ## Grid Network
 ## TODO: create a square graph with 9 nodes using the makeLink function (from above)
 ## Example: https://www.mathworks.com/matlabcentral/answers/213955-how-to-determine-the-neighbours-of-each-node-in-a-square-graph
 
+# Empty graph.
+square = {}
+# Number of nodes.
+n = 9
+# Add nodes with makeLink function.
+for i in range(n - 1):
+    # Nodes 0, 1, 3, & 4 connect to i + 1 & i + 3
+    if i in [0, 1, 3, 4]:
+        square = makeLink(square, i, i + 1)
+        square = makeLink(square, i, i + 3)
+    elif i in [2, 5]:
+        square = makeLink(square, i, i + 3)
+    else:
+        square = makeLink(square, i, i + 1)
+
+print(square)
+
 ## TODO: define a function countEdges
 
 # You may want to use the module math
-import math 
+import math
+def countEdges(graph):
+    edge_count = sum([len(graph[node]) for node in graph.keys()])/2
+    return edge_count
+countEdges(square)
+    
+    
 
 
 
@@ -130,7 +155,7 @@ movies[kb].keys() ## found meryl streep!
 
 
 
-## TODO: implement findShortestPath() to print shorest path between actors
+## TODO: implement findShortestPath() to print shortest path between actors
 ## print findShortestPath(movies, ms, ss)
 
 

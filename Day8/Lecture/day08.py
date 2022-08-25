@@ -315,7 +315,7 @@ plt.show()
 
 #---------- Plotting ----------#
 
-#pip install matplotlib
+# !pip install matplotlib
 
 import matplotlib.pyplot as plt
 
@@ -344,7 +344,7 @@ Maybe a description here
 """
 plt.figtext(.2, .05, txt, fontsize = 10, ha = "center")
 # Save plot
-plt.savefig('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day8\\Lecture\\plot.pdf')
+plt.savefig('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day8\\Lecture\\plot.pdf')
 
 # Display plot, use the option block=False
 # otherwise you will need to close the plot manually

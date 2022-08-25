@@ -10,10 +10,10 @@
 # Useful site: https://book.pythontips.com/en/latest/index.html
 
 import os
-os.chdir('C:\\Users\\miame\\Documents\\GitHub\\python_summer2022\\Day9\\Lecture')
+os.chdir('C:\\Users\\edwar\\Documents\\GitHub\\python_summer2022\\Day9\\Lecture')
 
-#pip install pandas
-#pip install numpy
+# !pip install pandas
+# !pip install numpy
 import pandas as pd
 import numpy as np
 
@@ -28,12 +28,14 @@ import numpy as np
 
 # Create a pd.Series with 4 elements:
 x = pd.Series([10, 100, 12, 5])
+x
 
 # We index a Series as we do with lists
 x[0]
 
 # We can also include and index many types of data
 y = pd.Series([10, 'a string', ['a','b'], 5])
+y
 y[2]
 y[2][0]
 
@@ -60,13 +62,14 @@ df2
 df1 # 6x3
 # Our Second DataFrame
 df2 # 3x6
-# also, no recycling when using list
+# also, no recycling when using list as ROWS.
+### Recycling does happen in columns.
 
 # We can check the data type
-df2.dtypes 
+df2.dtypes
 
 # We can check the row indexes
-df2.index 
+df2.index
 
 # And rename rows
 df2 = df2.rename(index = {0:"One", 1:"Two", 2:"Three"})
@@ -327,6 +330,8 @@ for i in range(1,20):
 else:
 	print('print this')
 print('this other thing')
+# It's going through the full for-loop first, then doing else statement, 
+## and finally finished with the final print statement.
 
 # And here?
 for i in range(1,20):
@@ -336,6 +341,10 @@ for i in range(1,20):
 else:
 	print('print this')	
 print('this other thing')
+# The 'break' input breaks the rest of the for-loop and else statement.
+
+## Lesson: INDENTATION MATTERS!
+
 
 # Our find_prime() from last class:
 def find_primes(me = 121, primes = []):
@@ -379,6 +388,7 @@ def print_squared(num):
 
 print_squared(2)
 # Find more here: https://book.pythontips.com/en/latest/debugging.html
+# Annamaria honestly recommends not using this. It doesn't work like she thinks it should.
 
 
 #---------- Tree ----------#
