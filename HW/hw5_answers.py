@@ -29,8 +29,11 @@ class Node:
 
 #%%
 class LinkedList():
+
 ### 1.  __init__(self, value). (FINISHED!)
-#####   Computational Complexity.
+#####   Computational Complexity. O(1)
+#####   Creating the list/initial node takes the same amount of time no matter how long the list will grow. 
+#####   Thus, this function is constant over time.
     def __init__(self, value = None):
         # Require value to only be integer.
         if not ((value is None) or isinstance(value, int)):
@@ -39,13 +42,19 @@ class LinkedList():
         self.num_nodes = 1
     
 ### 2.  length(self): (FINISHED!)
-#####   Computational Complexity.
+#####   Computational Complexity. O(1) (I think?)
+#####   I included a list size/length ticker in all the other functions addings/removing nodes.
+#####   As a result, this function remains the same no matter the length of the list. 
+#####   It thus has constant time.
     def length(self):
         length = self.num_nodes
         return length
 
 ### 3.  addNode(self, new_value). [FINISHED!]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n)
+#####   This function must 'traverse' the entire list one node at a time to add a new tail node.
+#####   Because 'traversing' the list requires linearly increasing computational energy as the list grows longer,
+#####   this function requires linearly increasing time.
     def addNode(self, new_value):
         # Create error if new_value isn't integer.
         if not isinstance(new_value, int):
@@ -59,7 +68,9 @@ class LinkedList():
         node_iteration.next = added_node # Adds node to end of linked list.
 
 ### 4.  addNodeAfter(self, new_value, after_node): [FINISHED!]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n).
+#####   Like the addNode function, this function 'traverses' the list one node at a time until it reaches the desired node.
+#####   For the same reason, this function requires linearly increasing time.
     def addNodeAfter(self, new_value, after_node):
         # Create error if 'after_node' isn't integer.
         if not isinstance(after_node, int):
@@ -90,7 +101,9 @@ class LinkedList():
             self.num_nodes += 1
 
 ### 5.  addNodeBefore(self, new_value, before_node). [FINISHED]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n).
+#####   This function is basically a slight modification to the 'addNodeAfter' function.
+#####   For the same reason, it requires linearly increasing time.
     def addNodeBefore(self, new_value, before_node):
         # Create error if new_value isn't integer.
         if not isinstance(new_value, int):
@@ -123,7 +136,9 @@ class LinkedList():
             self.num_nodes += 1
         
 ### 6.  removeNode(self, node_to_remove): [FINISHED!]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n)
+#####   This function traverses every node until it reaches the one that's to be removed.
+#####   For the same reason as the last several functions, this one has linearly increasing time.
     def removeNode(self, node_to_remove):
         # Standard error messages blah blah blah.
         if not isinstance(node_to_remove, int):
@@ -150,7 +165,9 @@ class LinkedList():
         self.num_nodes -= 1 # Update for length function.
 
 ### 7.  removeNodesByValue(self, value): [FINISHED!]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n).
+#####   This function uses pointers to 'traverse' the function removing nodes that contain the specified value when it finds them.
+#####   Since it goes through nodes one at a time, I think it uses linear time
     def removeNodesByValue(self, value):
         ## NEEDS self.num_nodes FUNCTIONALITY.
         # Create error if value isn't integer.
@@ -182,7 +199,9 @@ class LinkedList():
             current_it = current_it.next
         
 ### 8.  reverse(self): [FINISHED!]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n)
+#####   This function 'traverses' the list one node at a time and reverses their connection to the other nodes.
+#####   Because the computational effort increases linearly with increasing list size, this function requires linear time.
     def reverse(self):
         # STRATEGY: go down the linked list and switch all nodes around so that their prior node is now their next node.
         ########### KEEP TRACK of prior, present, and subsequent nodes.
@@ -204,7 +223,9 @@ class LinkedList():
         # This should've completely flipped around the list.
 
 ### 9.  __str(self)__. [FINISHED]
-#####   Computational Complexity.
+#####   Computational Complexity. O(n).
+#####   As with the others, this function traverses the list one node at a time. 
+#####   Thus, it's computational complexity increases linearly with the size of the list.
     def __str__(self):
         # STRATEGY: start at head, then gather node information in while loop.
         # Start print statement.
